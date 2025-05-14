@@ -4,24 +4,32 @@ on:
   push:
     branches:
       - check
-    pull_request:
-      branches:
-        -check
+  pull_request:
+    branches:
+      - check
+
 jobs:
   build:
-    runs-on:ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
-      -name:Checkout Code
-      uses:actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      -name:Set up Python
-      uses:actions/setup-oython@v5
-      with:
-        python-version:'3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
 
-      -name:Lint with flake8
-      run: |flake8 . --max-line-length=88 --extended-ignore=E203
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
 
-      -name:Run tests
-      run: | pytest script.py
+      - name: Lint with flake8
+        run: |
+          flake8 . --max-line-length=88 --extend-ignore=E203
+
+      - name: Run tests
+        run: |
+          pytest
